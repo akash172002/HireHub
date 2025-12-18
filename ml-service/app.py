@@ -9,16 +9,17 @@ class MatchRequest(BaseModel):
     resume_text: str
     job_text: str
 
-@app.post("/match")
-def match(req: MatchRequest):
+@app.get("/")
+def health_check():
+    return {"status": "ML Service Running"}
+
+@app.post("/match-score")
+def match_score(data: MatchRequest):
+    texts = [data.resume_text, data.job_text]
     vectorizer = TfidfVectorizer(stop_words="english")
+    tfidf = vectorizer.fit_transform(texts)
 
-    vectors = vectorizer.fit_transform([
-        req.resume_text,
-        req.job_text
-    ])
-
-    score = cosine_similarity(vectors[0:1], vectors[1:2])[0][0]
+    score = cosine_similarity(tfidf[0:1], tfidf[1:2])[0][0]
     score_percent = round(score * 100, 2)
 
     return {
