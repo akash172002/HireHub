@@ -6,12 +6,17 @@ import { v4 as uuid } from "uuid";
 
 export const getProfile = async (req, res) => {
   const user = await User.findById(req.user.id).select("-password");
+  if (!user) console.error("[Profile] User not found in DB for id:", req.user.id);
+  else console.log("[Profile] Fetched from DB | _id:", user._id, "| email:", user.email);
   res.json(user);
 };
 
 export const updateProfile = async (req, res) => {
   try {
     const updates = { ...req.body };
+    if (updates.skills && typeof updates.skills === "string") {
+      updates.skills = updates.skills.split(",").map((s) => s.trim()).filter(Boolean);
+    }
 
     if (req.files?.photo) {
       const photo = req.files.photo[0];
@@ -48,9 +53,10 @@ export const updateProfile = async (req, res) => {
       new: true,
     }).select("-password");
 
+    console.log("[Profile] OK – Profile updated in DB | _id:", user?._id);
     res.json(user);
   } catch (err) {
-    console.error(err);
+    console.error("[Profile] Error – profile NOT updated:", err.name, err.message);
     res.status(500).json({ message: err.message });
   }
 };

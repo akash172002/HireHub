@@ -73,5 +73,17 @@ export const updateJobStatus = async (req, res) => {
     `,
   });
 
-  res.json({ message: `Job ${status.toLowerCase()}` });
+  res.json(job);
+};
+
+export const listJobsAdmin = async (req, res) => {
+  const { page = 1, limit = 10, status } = req.query;
+  const query = status ? { status } : {};
+  const jobs = await Job.find(query)
+    .populate("postedBy", "name email")
+    .skip((page - 1) * limit)
+    .limit(Number(limit))
+    .sort({ createdAt: -1 });
+  const total = await Job.countDocuments(query);
+  res.json({ total, page: Number(page), pages: Math.ceil(total / limit), jobs });
 };
