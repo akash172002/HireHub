@@ -4,9 +4,8 @@ import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 
 const ROLES = [
-  { value: 'SEEKER', label: 'Job Seeker' },
-  { value: 'RECRUITER', label: 'Recruiter' },
-  { value: 'ADMIN', label: 'Admin' },
+  { value: 'SEEKER', label: 'Job Seeker', icon: '🔍', desc: 'Find and apply to jobs' },
+  { value: 'RECRUITER', label: 'Recruiter', icon: '📋', desc: 'Post jobs & find talent' },
 ];
 
 export default function Register() {
@@ -29,35 +28,106 @@ export default function Register() {
       login(data.token, data.user);
       navigate('/', { replace: true });
     } catch (err) {
-      setError(err.response?.data?.message || err.response?.data?.errors ? JSON.stringify(err.response.data.errors) : 'Registration failed');
+      const e = err.response?.data;
+      setError(e?.message || (e?.errors ? JSON.stringify(e.errors) : 'Registration failed'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md">
-        <div className="card p-8">
-          <h1 className="text-2xl font-bold text-slate-800 text-center">Create account</h1>
-          <p className="text-slate-600 text-center mt-1 text-sm">Join HireHub</p>
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+    <div className="min-h-[90vh] flex">
+      {/* Left brand panel */}
+      <div
+        className="hidden lg:flex lg:w-1/2 relative overflow-hidden items-center justify-center p-12"
+        style={{ background: 'linear-gradient(135deg, #0d9488 0%, #4f46e5 100%)' }}
+      >
+        <div
+          className="absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+            backgroundSize: '28px 28px',
+          }}
+        />
+        <div className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-white/10 animate-blob" />
+        <div className="absolute -top-24 -right-24 w-56 h-56 rounded-full bg-white/10 animate-blob" style={{ animationDelay: '5s' }} />
+
+        <div className="relative text-center text-white max-w-sm">
+          <div
+            className="w-20 h-20 rounded-3xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-5xl font-black mx-auto mb-6 animate-float"
+          >
+            H
+          </div>
+          <h2 className="text-4xl font-black mb-3">Join HireHub</h2>
+          <p className="text-teal-100 text-lg leading-relaxed">
+            Set up your free account in under 2 minutes and start your journey.
+          </p>
+
+          <div className="mt-10 space-y-3 text-left">
+            {[
+              { icon: '✅', text: 'Free forever — no credit card needed' },
+              { icon: '🤖', text: 'AI parses your resume automatically' },
+              { icon: '📬', text: 'Get matched to jobs that fit you' },
+              { icon: '📈', text: 'Track every application in real time' },
+            ].map((f) => (
+              <div key={f.text} className="flex items-center gap-3 bg-white/10 rounded-xl p-3 border border-white/10">
+                <span className="text-lg">{f.icon}</span>
+                <span className="text-sm text-white/90 font-medium">{f.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Right form panel */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-4 py-12 bg-slate-50">
+        <div className="w-full max-w-md animate-fade-in-up">
+          {/* Mobile logo */}
+          <div className="lg:hidden mb-8 text-center">
+            <div className="inline-flex items-center gap-2.5">
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-white text-lg"
+                style={{ background: 'linear-gradient(135deg, #6366f1 0%, #0d9488 100%)' }}
+              >
+                H
+              </div>
+              <span className="text-2xl font-black text-slate-900">
+                Hire<span className="gradient-text">Hub</span>
+              </span>
+            </div>
+          </div>
+
+          <h1 className="text-3xl font-black text-slate-900">Create account</h1>
+          <p className="text-slate-500 mt-1">
+            Already have one?{' '}
+            <Link to="/login" className="link font-semibold">
+              Sign in →
+            </Link>
+          </p>
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             {error && (
-              <div className="p-3 rounded-xl bg-red-50 text-red-700 text-sm">{error}</div>
+              <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2 animate-fade-in">
+                <span>⚠️</span>
+                <span>{error}</span>
+              </div>
             )}
+
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Name</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">Full name</label>
               <input
                 type="text"
                 className="input"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
+                placeholder="Your full name"
                 required
+                autoComplete="name"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">Email address</label>
               <input
                 type="email"
                 className="input"
@@ -65,10 +135,12 @@ export default function Register() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
+                autoComplete="email"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">Password</label>
               <input
                 type="password"
                 className="input"
@@ -77,26 +149,53 @@ export default function Register() {
                 placeholder="Min 6 characters"
                 minLength={6}
                 required
+                autoComplete="new-password"
               />
             </div>
+
+            {/* Role selector */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">I am a</label>
-              <select
-                className="input"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
+              <label className="block text-sm font-bold text-slate-700 mb-2">I am a…</label>
+              <div className="grid grid-cols-2 gap-3">
                 {ROLES.map((r) => (
-                  <option key={r.value} value={r.value}>{r.label}</option>
+                  <button
+                    key={r.value}
+                    type="button"
+                    onClick={() => setRole(r.value)}
+                    className={`p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                      role === r.value
+                        ? 'border-indigo-500 bg-indigo-50 shadow-md shadow-indigo-100'
+                        : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="text-2xl mb-1">{r.icon}</div>
+                    <div className={`font-bold text-sm ${role === r.value ? 'text-indigo-700' : 'text-slate-700'}`}>
+                      {r.label}
+                    </div>
+                    <div className="text-xs text-slate-500 mt-0.5">{r.desc}</div>
+                  </button>
                 ))}
-              </select>
+              </div>
             </div>
-            <button type="submit" className="btn-primary w-full py-3 rounded-xl" disabled={loading}>
-              {loading ? 'Creating account…' : 'Sign up'}
+
+            <button
+              type="submit"
+              className="btn-primary w-full py-3.5 text-base rounded-xl"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Creating account…
+                </span>
+              ) : (
+                'Create Account →'
+              )}
             </button>
           </form>
-          <p className="mt-6 text-center text-slate-600 text-sm">
-            Already have an account? <Link to="/login" className="link">Log in</Link>
+
+          <p className="mt-4 text-center text-slate-400 text-xs">
+            By signing up, you agree to our Terms of Service and Privacy Policy.
           </p>
         </div>
       </div>
