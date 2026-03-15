@@ -28,9 +28,10 @@ build/
 .cache/
 
 # ========================
-# Uploads (local dev only)
+# Uploads (local dev only – ignore files, keep dir structure)
 # ========================
-uploads/
+uploads/**/*.pdf
+uploads/**/*.tmp
 
 # ========================
 # OS / Editor

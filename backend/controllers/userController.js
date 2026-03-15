@@ -1,8 +1,25 @@
 import cloudinary from "../config/cloudinary.js";
 import User from "../models/User.js";
-import s3 from "../config/s3.js";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { v4 as uuid } from "uuid";
+
+export const getResumeUrl = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("resume resumePublicId");
+    if (!user?.resume) return res.status(404).json({ message: "No resume found" });
+    if (!user?.resumePublicId) return res.status(400).json({ message: "Please re-upload your resume." });
+
+    const signedUrl = cloudinary.utils.private_download_url(user.resumePublicId, "", {
+      resource_type: "raw",
+      type: "authenticated",
+      attachment: false,
+      expires_at: Math.floor(Date.now() / 1000) + 600,
+    });
+
+    res.json({ url: signedUrl });
+  } catch (err) {
+    console.error("[Resume] error:", err.message);
+    res.status(500).json({ message: "Failed to get resume URL" });
+  }
+};
 
 export const getProfile = async (req, res) => {
   const user = await User.findById(req.user.id).select("-password");
@@ -27,7 +44,7 @@ export const updateProfile = async (req, res) => {
       updates.profilePhoto = result.secure_url;
     }
 
-    /* ---------- RESUME PDF (AWS S3) ---------- */
+    /* ---------- RESUME PDF (Cloudinary raw – preserves original PDF) ---------- */
     if (req.files?.resume) {
       const resume = req.files.resume[0];
 
@@ -35,18 +52,15 @@ export const updateProfile = async (req, res) => {
         return res.status(400).json({ message: "Resume must be a PDF" });
       }
 
-      const fileKey = `resumes/${req.user.id}-${uuid()}.pdf`;
-
-      await s3.send(
-        new PutObjectCommand({
-          Bucket: process.env.AWS_S3_BUCKET,
-          Key: fileKey,
-          Body: resume.buffer,
-          ContentType: "application/pdf",
-        })
-      );
-
-      updates.resume = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
+      const dataUri = `data:application/pdf;base64,${resume.buffer.toString("base64")}`;
+      const result = await cloudinary.uploader.upload(dataUri, {
+        folder: "resumes",
+        resource_type: "raw",
+        type: "authenticated",
+        format: "pdf",
+      });
+      updates.resume = result.secure_url;
+      updates.resumePublicId = result.public_id;
     }
 
     const user = await User.findByIdAndUpdate(req.user.id, updates, {

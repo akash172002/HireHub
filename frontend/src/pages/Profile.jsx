@@ -22,6 +22,7 @@ export default function Profile() {
   const [photoFile, setPhotoFile] = useState(null);
   const [resumeFile, setResumeFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [resumeLoading, setResumeLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -83,6 +84,18 @@ export default function Profile() {
       </div>
     );
   }
+
+  const openResume = async () => {
+    setResumeLoading(true);
+    try {
+      const { data } = await api.get('/users/me/resume');
+      window.open(data.url, '_blank');
+    } catch {
+      setMessage('Could not load resume. Please try again.');
+    } finally {
+      setResumeLoading(false);
+    }
+  };
 
   const displayPhoto = photoPreview || profile?.profilePhoto;
   const initial = ((profile?.name || user?.email || '?')[0]).toUpperCase();
@@ -164,14 +177,16 @@ export default function Profile() {
 
             {/* Resume link */}
             {profile?.resume && (
-              <a
-                href={profile.resume}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-5 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-teal-50 text-teal-700 text-sm font-bold border border-teal-100 hover:bg-teal-100 transition-colors"
+              <button
+                onClick={openResume}
+                disabled={resumeLoading}
+                className="mt-5 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-teal-50 text-teal-700 text-sm font-bold border border-teal-100 hover:bg-teal-100 transition-colors disabled:opacity-60"
               >
-                <FileText className="w-4 h-4" /> View Resume
-              </a>
+                {resumeLoading
+                  ? <span className="w-4 h-4 border-2 border-teal-300 border-t-teal-700 rounded-full animate-spin" />
+                  : <FileText className="w-4 h-4" />}
+                {resumeLoading ? 'Loading…' : 'View Resume'}
+              </button>
             )}
           </div>
         </div>
@@ -272,9 +287,9 @@ export default function Profile() {
                     />
                   </label>
                   {profile?.resume && !resumeFile && (
-                    <a href={profile.resume} target="_blank" rel="noopener noreferrer" className="text-xs link mt-1 inline-block">
+                    <button onClick={openResume} className="text-xs link mt-1 inline-block">
                       View current resume →
-                    </a>
+                    </button>
                   )}
                 </div>
               )}
@@ -295,6 +310,7 @@ export default function Profile() {
           </div>
         </div>
       </div>
+
     </div>
   );
 }

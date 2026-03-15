@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema(
     skills: [String],
     profilePhoto: String,
     resume: String,
+    resumePublicId: String,
   },
   { timestamps: true }
 );
