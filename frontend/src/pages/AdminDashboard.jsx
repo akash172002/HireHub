@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../api/axios';
+import { ClipboardList, CheckCircle, XCircle, Building2, Users, BarChart2, PieChart, Inbox, Clock } from 'lucide-react';
 
 const MONTHS = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -80,12 +81,18 @@ export default function AdminDashboard() {
   };
 
   const statCards = [
-    { label: 'Total Jobs', value: counts?.totalJobs ?? 0, icon: '📋', gradient: 'from-indigo-500 to-violet-600', change: 'All time' },
-    { label: 'Approved', value: counts?.approvedJobs ?? 0, icon: '✅', gradient: 'from-teal-400 to-emerald-500', change: 'Live jobs' },
-    { label: 'Rejected', value: counts?.rejectedJobs ?? 0, icon: '❌', gradient: 'from-red-400 to-rose-500', change: 'Declined' },
-    { label: 'Companies', value: counts?.totalCompanies ?? 0, icon: '🏢', gradient: 'from-orange-400 to-amber-500', change: 'Hiring' },
-    { label: 'Recruiters', value: counts?.totalRecruiters ?? 0, icon: '👔', gradient: 'from-violet-500 to-purple-600', change: 'Active' },
+    { label: 'Total Jobs', value: counts?.totalJobs ?? 0, Icon: ClipboardList, gradient: 'from-indigo-500 to-violet-600', change: 'All time' },
+    { label: 'Approved', value: counts?.approvedJobs ?? 0, Icon: CheckCircle, gradient: 'from-teal-400 to-emerald-500', change: 'Live jobs' },
+    { label: 'Rejected', value: counts?.rejectedJobs ?? 0, Icon: XCircle, gradient: 'from-red-400 to-rose-500', change: 'Declined' },
+    { label: 'Companies', value: counts?.totalCompanies ?? 0, Icon: Building2, gradient: 'from-orange-400 to-amber-500', change: 'Hiring' },
+    { label: 'Recruiters', value: counts?.totalRecruiters ?? 0, Icon: Users, gradient: 'from-violet-500 to-purple-600', change: 'Active' },
   ];
+
+  const filterConfig = {
+    PENDING: { Icon: Clock, label: 'PENDING' },
+    APPROVED: { Icon: CheckCircle, label: 'APPROVED' },
+    REJECTED: { Icon: XCircle, label: 'REJECTED' },
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -106,9 +113,9 @@ export default function AdminDashboard() {
             style={{ animationDelay: `${i * 80}ms` }}
           >
             <div
-              className={`w-11 h-11 rounded-xl bg-gradient-to-br ${s.gradient} flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform shadow-md`}
+              className={`w-11 h-11 rounded-xl bg-gradient-to-br ${s.gradient} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-md`}
             >
-              {s.icon}
+              <s.Icon className="w-5 h-5 text-white" />
             </div>
             <p className="text-2xl font-black text-slate-800">{s.value}</p>
             <p className="text-slate-500 text-sm font-semibold">{s.label}</p>
@@ -126,7 +133,9 @@ export default function AdminDashboard() {
               <h2 className="font-black text-slate-800 text-lg">Jobs Posted by Month</h2>
               <p className="text-slate-400 text-sm">Monthly posting activity</p>
             </div>
-            <div className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center text-xl">📊</div>
+            <div className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center">
+              <BarChart2 className="w-5 h-5 text-indigo-600" />
+            </div>
           </div>
           {jobsChart.length === 0 ? (
             <div className="h-40 flex items-center justify-center text-slate-400 text-sm">No data available</div>
@@ -158,7 +167,9 @@ export default function AdminDashboard() {
               <h2 className="font-black text-slate-800 text-lg">Jobs by Status</h2>
               <p className="text-slate-400 text-sm">Approval breakdown</p>
             </div>
-            <div className="w-9 h-9 rounded-xl bg-teal-50 flex items-center justify-center text-xl">🥧</div>
+            <div className="w-9 h-9 rounded-xl bg-teal-50 flex items-center justify-center">
+              <PieChart className="w-5 h-5 text-teal-600" />
+            </div>
           </div>
 
           {approvalChart.length === 0 ? (
@@ -201,27 +212,32 @@ export default function AdminDashboard() {
             <p className="text-slate-400 text-sm">Review and approve job postings</p>
           </div>
           <div className="flex items-center gap-2">
-            {['PENDING', 'APPROVED', 'REJECTED'].map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => { setStatusFilter(s); setJobsPage(1); }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  statusFilter === s
-                    ? 'text-white shadow-md'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-                style={statusFilter === s ? { background: 'linear-gradient(135deg, #6366f1, #0d9488)' } : {}}
-              >
-                {s === 'PENDING' ? '⏳' : s === 'APPROVED' ? '✅' : '❌'} {s}
-              </button>
-            ))}
+            {['PENDING', 'APPROVED', 'REJECTED'].map((s) => {
+              const fc = filterConfig[s];
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => { setStatusFilter(s); setJobsPage(1); }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                    statusFilter === s
+                      ? 'text-white shadow-md'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                  style={statusFilter === s ? { background: 'linear-gradient(135deg, #6366f1, #0d9488)' } : {}}
+                >
+                  <fc.Icon className="w-3 h-3" /> {s}
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {jobs.length === 0 ? (
           <div className="p-16 text-center text-slate-500">
-            <div className="text-5xl mb-3">📭</div>
+            <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center mx-auto mb-3">
+              <Inbox className="w-6 h-6 text-slate-400" />
+            </div>
             <p className="font-semibold">No {statusFilter.toLowerCase()} jobs.</p>
           </div>
         ) : (
@@ -251,33 +267,38 @@ export default function AdminDashboard() {
                     <>
                       <button
                         type="button"
-                        className="btn-primary text-sm py-2 px-4 rounded-xl"
+                        className="btn-primary text-sm py-2 px-4 rounded-xl flex items-center gap-1.5"
                         disabled={updating === job._id}
                         onClick={() => updateJobStatus(job._id, 'APPROVED')}
                       >
                         {updating === job._id ? (
-                          <span className="flex items-center gap-1">
+                          <>
                             <span className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
                             …
-                          </span>
+                          </>
                         ) : (
-                          '✅ Approve'
+                          <>
+                            <CheckCircle className="w-3.5 h-3.5" /> Approve
+                          </>
                         )}
                       </button>
                       <button
                         type="button"
-                        className="btn-danger text-sm py-2 px-4 rounded-xl"
+                        className="btn-danger text-sm py-2 px-4 rounded-xl flex items-center gap-1.5"
                         disabled={updating === job._id}
                         onClick={() => updateJobStatus(job._id, 'REJECTED')}
                       >
-                        ❌ Reject
+                        <XCircle className="w-3.5 h-3.5" /> Reject
                       </button>
                     </>
                   ) : (
                     <span
                       className={`badge ${job.status === 'APPROVED' ? 'badge-green' : 'badge-red'} flex items-center gap-1`}
                     >
-                      {job.status === 'APPROVED' ? '✅' : '❌'} {job.status}
+                      {job.status === 'APPROVED'
+                        ? <CheckCircle className="w-3 h-3" />
+                        : <XCircle className="w-3 h-3" />
+                      } {job.status}
                     </span>
                   )}
                 </div>

@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../api/axios';
+import { Mail, Star, XCircle, ClipboardList, Users, Trophy, FileText, Inbox, Sparkles } from 'lucide-react';
 
 const STATUS_OPTIONS = ['Applied', 'Shortlisted', 'Rejected'];
 
 const STATUS_CONFIG = {
-  Applied: { badge: 'badge-orange', icon: '📬' },
-  Shortlisted: { badge: 'badge-blue', icon: '⭐' },
-  Rejected: { badge: 'badge-red', icon: '❌' },
+  Applied: { badge: 'badge-orange', Icon: Mail },
+  Shortlisted: { badge: 'badge-blue', Icon: Star },
+  Rejected: { badge: 'badge-red', Icon: XCircle },
 };
 
 function MatchBar({ score }) {
@@ -84,6 +85,17 @@ export default function JobApplications() {
         )
       : null;
 
+  const summaryStats = [
+    { label: 'Total Applicants', value: applications.length, Icon: Users, color: 'from-indigo-500 to-violet-600' },
+    { label: 'Shortlisted', value: shortlisted, Icon: Star, color: 'from-teal-400 to-emerald-500' },
+    {
+      label: 'Avg. Match Score',
+      value: avgScore != null ? `${avgScore}%` : 'N/A',
+      Icon: Sparkles,
+      color: 'from-orange-400 to-rose-500',
+    },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
       <Link
@@ -100,28 +112,19 @@ export default function JobApplications() {
         </h1>
         {jobTitle && (
           <p className="text-slate-500 mt-1 font-medium flex items-center gap-1.5">
-            <span>📋</span> {jobTitle}
+            <ClipboardList className="w-4 h-4" /> {jobTitle}
           </p>
         )}
       </div>
 
       {applications.length > 0 && (
         <div className="grid grid-cols-3 gap-4 mb-8">
-          {[
-            { label: 'Total Applicants', value: applications.length, icon: '👥', color: 'from-indigo-500 to-violet-600' },
-            { label: 'Shortlisted', value: shortlisted, icon: '⭐', color: 'from-teal-400 to-emerald-500' },
-            {
-              label: 'Avg. Match Score',
-              value: avgScore != null ? `${avgScore}%` : 'N/A',
-              icon: '🎯',
-              color: 'from-orange-400 to-rose-500',
-            },
-          ].map((s) => (
+          {summaryStats.map((s) => (
             <div key={s.label} className="card p-4 sm:p-5 text-center group hover:-translate-y-1 transition-all duration-200">
               <div
-                className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-lg mx-auto mb-2 group-hover:scale-110 transition-transform`}
+                className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform`}
               >
-                {s.icon}
+                <s.Icon className="w-5 h-5 text-white" />
               </div>
               <p className="text-2xl font-black text-slate-800">{s.value}</p>
               <p className="text-slate-500 text-xs sm:text-sm font-medium">{s.label}</p>
@@ -132,7 +135,9 @@ export default function JobApplications() {
 
       {applications.length === 0 ? (
         <div className="card p-16 text-center animate-fade-in-up">
-          <div className="text-6xl mb-4">📭</div>
+          <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+            <Inbox className="w-8 h-8 text-slate-400" />
+          </div>
           <h3 className="text-xl font-bold text-slate-700 mb-2">No applications yet</h3>
           <p className="text-slate-500">Candidates haven't applied to this job yet.</p>
         </div>
@@ -142,7 +147,7 @@ export default function JobApplications() {
             .slice()
             .sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0))
             .map((app, idx) => {
-              const cfg = STATUS_CONFIG[app.status] || { badge: 'badge-blue', icon: '📄' };
+              const cfg = STATUS_CONFIG[app.status] || { badge: 'badge-blue', Icon: Mail };
               const initial = ((app.userId?.name || app.userId?.email || '?')[0]).toUpperCase();
               return (
                 <li
@@ -176,12 +181,12 @@ export default function JobApplications() {
                             </p>
                             {app.recommended && (
                               <span className="badge badge-green flex items-center gap-1">
-                                ⭐ Recommended
+                                <Star className="w-3 h-3" /> Recommended
                               </span>
                             )}
                             {idx === 0 && app.matchScore != null && (
                               <span className="badge badge-purple flex items-center gap-1">
-                                🏆 Top Match
+                                <Trophy className="w-3 h-3" /> Top Match
                               </span>
                             )}
                           </div>
@@ -201,7 +206,7 @@ export default function JobApplications() {
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1.5 mt-2 text-xs font-bold text-teal-600 hover:text-teal-700 transition-colors"
                             >
-                              📄 View Resume →
+                              <FileText className="w-3.5 h-3.5" /> View Resume →
                             </a>
                           )}
                         </div>
@@ -210,7 +215,7 @@ export default function JobApplications() {
                       {/* Status selector */}
                       <div className="flex flex-col items-end gap-2 shrink-0">
                         <span className={`${cfg.badge} badge flex items-center gap-1`}>
-                          {cfg.icon} {app.status}
+                          <cfg.Icon className="w-3 h-3" /> {app.status}
                         </span>
                         <select
                           value={app.status}

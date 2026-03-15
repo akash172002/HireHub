@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
+import { Mail, Lock, AlertTriangle } from 'lucide-react';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -52,7 +53,9 @@ export default function ForgotPassword() {
 
           {sent ? (
             <div className="text-center py-4">
-              <div className="text-6xl mb-4">📬</div>
+              <div className="w-16 h-16 rounded-2xl bg-teal-50 flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-8 h-8 text-teal-600" />
+              </div>
               <h1 className="text-2xl font-black text-slate-800 mb-2">Check your inbox!</h1>
               <p className="text-slate-500 leading-relaxed">{message}</p>
               <Link
@@ -65,7 +68,9 @@ export default function ForgotPassword() {
           ) : (
             <>
               <div className="text-center mb-6">
-                <div className="text-5xl mb-3">🔐</div>
+                <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center mx-auto mb-3">
+                  <Lock className="w-7 h-7 text-indigo-600" />
+                </div>
                 <h1 className="text-2xl font-black text-slate-800">Forgot password?</h1>
                 <p className="text-slate-500 mt-1 text-sm">
                   Enter your email and we'll send you a reset link.
@@ -75,7 +80,8 @@ export default function ForgotPassword() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 {error && (
                   <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2 animate-fade-in">
-                    <span>⚠️</span> <span>{error}</span>
+                    <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
+                    <span>{error}</span>
                   </div>
                 )}
 

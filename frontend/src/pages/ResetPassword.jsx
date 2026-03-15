@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import api from '../api/axios';
+import { Ban, Key, CheckCircle, AlertTriangle } from 'lucide-react';
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -39,7 +40,9 @@ export default function ResetPassword() {
     return (
       <div className="min-h-[90vh] flex items-center justify-center px-4 bg-slate-50">
         <div className="card p-10 text-center max-w-md w-full animate-fade-in-up">
-          <div className="text-6xl mb-4">⛔</div>
+          <div className="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-4">
+            <Ban className="w-8 h-8 text-red-500" />
+          </div>
           <h2 className="text-xl font-black text-slate-800 mb-2">Invalid Reset Link</h2>
           <p className="text-slate-500 mb-6">This link is invalid or has expired. Request a new one.</p>
           <Link to="/forgot-password" className="btn-primary px-6 py-3 rounded-xl">
@@ -76,7 +79,9 @@ export default function ResetPassword() {
 
           {done ? (
             <div className="text-center py-4 animate-fade-in">
-              <div className="text-6xl mb-4">🎉</div>
+              <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-8 h-8 text-emerald-500" />
+              </div>
               <h1 className="text-2xl font-black text-slate-800 mb-2">Password Updated!</h1>
               <p className="text-slate-500 mb-6">
                 Your password has been successfully changed. You can now sign in with your new password.
@@ -88,7 +93,9 @@ export default function ResetPassword() {
           ) : (
             <>
               <div className="text-center mb-6">
-                <div className="text-5xl mb-3">🔑</div>
+                <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center mx-auto mb-3">
+                  <Key className="w-7 h-7 text-indigo-600" />
+                </div>
                 <h1 className="text-2xl font-black text-slate-800">Set New Password</h1>
                 <p className="text-slate-500 mt-1 text-sm">Choose a strong password for your account.</p>
               </div>
@@ -96,7 +103,8 @@ export default function ResetPassword() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 {error && (
                   <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2 animate-fade-in">
-                    <span>⚠️</span> <span>{error}</span>
+                    <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
+                    <span>{error}</span>
                   </div>
                 )}
 

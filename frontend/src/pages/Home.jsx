@@ -1,38 +1,43 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useEffect, useState } from 'react';
+import {
+  Briefcase, Building2, Users, Star,
+  Sparkles, Zap, BarChart2, Bell,
+  AlertTriangle, Search, ClipboardList,
+} from 'lucide-react';
 
 const stats = [
-  { label: 'Jobs Available', value: '10K+', icon: '💼' },
-  { label: 'Companies', value: '500+', icon: '🏢' },
-  { label: 'Job Seekers', value: '50K+', icon: '👥' },
-  { label: 'Placements', value: '8K+', icon: '🎉' },
+  { label: 'Jobs Available', value: '10K+', Icon: Briefcase },
+  { label: 'Companies', value: '500+', Icon: Building2 },
+  { label: 'Job Seekers', value: '50K+', Icon: Users },
+  { label: 'Placements', value: '8K+', Icon: Star },
 ];
 
 const features = [
   {
-    icon: '🎯',
+    Icon: Sparkles,
     title: 'Smart AI Matching',
     desc: 'Our AI scores exactly how well your resume fits each job — no more guessing.',
     gradient: 'from-indigo-500 to-violet-600',
     bg: 'bg-indigo-50',
   },
   {
-    icon: '⚡',
+    Icon: Zap,
     title: 'One-Click Apply',
     desc: 'Apply to any job instantly with your saved profile and resume.',
     gradient: 'from-orange-400 to-rose-500',
     bg: 'bg-orange-50',
   },
   {
-    icon: '📊',
+    Icon: BarChart2,
     title: 'Real-Time Tracking',
     desc: 'Monitor all your applications and their statuses from a single dashboard.',
     gradient: 'from-teal-400 to-cyan-500',
     bg: 'bg-teal-50',
   },
   {
-    icon: '🔔',
+    Icon: Bell,
     title: 'Instant Updates',
     desc: 'Get notified the moment a recruiter updates your application status.',
     gradient: 'from-violet-500 to-indigo-600',
@@ -78,8 +83,9 @@ export default function Home() {
       {/* ── Hero ── */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 md:pt-32 md:pb-24">
         {forbidden && user && (
-          <div className="mb-8 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-center text-sm font-medium animate-fade-in">
-            ⚠️ You don't have permission to access that page. Use the menu for your role.
+          <div className="mb-8 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-center text-sm font-medium animate-fade-in flex items-center justify-center gap-2">
+            <AlertTriangle className="w-4 h-4 shrink-0" />
+            You don't have permission to access that page. Use the menu for your role.
           </div>
         )}
 
@@ -134,7 +140,9 @@ export default function Home() {
               className="card p-5 text-center group hover:-translate-y-1 transition-all duration-300"
               style={{ animationDelay: `${i * 100}ms` }}
             >
-              <div className="text-2xl mb-1">{s.icon}</div>
+              <div className="flex justify-center mb-2">
+                <s.Icon className="w-6 h-6 text-indigo-500" />
+              </div>
               <p className="text-2xl sm:text-3xl font-black gradient-text">{s.value}</p>
               <p className="text-slate-500 text-xs sm:text-sm mt-1 font-medium">{s.label}</p>
             </div>
@@ -196,9 +204,9 @@ export default function Home() {
                 className="card p-6 group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-default"
               >
                 <div
-                  className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${f.gradient} flex items-center justify-center text-2xl mb-5 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-lg`}
+                  className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${f.gradient} flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-lg`}
                 >
-                  {f.icon}
+                  <f.Icon className="w-7 h-7 text-white" />
                 </div>
                 <h3 className="font-bold text-slate-800 text-lg">{f.title}</h3>
                 <p className="mt-2 text-slate-500 text-sm leading-relaxed">{f.desc}</p>
@@ -214,7 +222,9 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="card p-8 border-2 border-indigo-100 group hover:-translate-y-1 transition-all duration-300">
-                <div className="text-4xl mb-4">🔍</div>
+                <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center mb-4">
+                  <Search className="w-6 h-6 text-indigo-600" />
+                </div>
                 <h3 className="text-2xl font-black text-slate-800 mb-2">Looking for a job?</h3>
                 <p className="text-slate-500 mb-6">Upload your resume, get AI match scores, and apply to hundreds of jobs instantly.</p>
                 <Link to="/register" className="btn-primary px-6 py-3 rounded-xl">
@@ -222,7 +232,9 @@ export default function Home() {
                 </Link>
               </div>
               <div className="card p-8 border-2 border-teal-100 group hover:-translate-y-1 transition-all duration-300">
-                <div className="text-4xl mb-4">📋</div>
+                <div className="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center mb-4">
+                  <ClipboardList className="w-6 h-6 text-teal-600" />
+                </div>
                 <h3 className="text-2xl font-black text-slate-800 mb-2">Hiring talent?</h3>
                 <p className="text-slate-500 mb-6">Post jobs, get AI-ranked applicants, and find the perfect match faster than ever.</p>
                 <Link to="/register" className="btn-secondary px-6 py-3 rounded-xl border-teal-200 hover:border-teal-400 hover:text-teal-700 hover:bg-teal-50">
@@ -248,7 +260,6 @@ export default function Home() {
               backgroundSize: '32px 32px',
             }}
           />
-          {/* Blob decorations */}
           <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-20 animate-blob" style={{ background: 'radial-gradient(circle, white, transparent)' }} />
           <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full opacity-10 animate-blob" style={{ background: 'radial-gradient(circle, white, transparent)', animationDelay: '5s' }} />
 

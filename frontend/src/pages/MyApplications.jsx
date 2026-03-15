@@ -1,25 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
+import { Mail, Star, XCircle, Inbox } from 'lucide-react';
 
 const STATUS_CONFIG = {
   Applied: {
     badge: 'badge-orange',
-    icon: '📬',
+    Icon: Mail,
     label: 'Applied',
     bar: 'bg-orange-400',
     step: 1,
   },
   Shortlisted: {
     badge: 'badge-blue',
-    icon: '⭐',
+    Icon: Star,
     label: 'Shortlisted',
     bar: 'bg-indigo-500',
     step: 2,
   },
   Rejected: {
     badge: 'badge-red',
-    icon: '❌',
+    Icon: XCircle,
     label: 'Rejected',
     bar: 'bg-red-400',
     step: 0,
@@ -77,6 +78,12 @@ export default function MyApplications() {
     return acc;
   }, {});
 
+  const summaryStats = [
+    { label: 'Total Applied', value: list.length, Icon: Mail, color: 'from-indigo-500 to-violet-600' },
+    { label: 'Shortlisted', value: statusCounts['Shortlisted'] || 0, Icon: Star, color: 'from-teal-400 to-cyan-500' },
+    { label: 'Rejected', value: statusCounts['Rejected'] || 0, Icon: XCircle, color: 'from-red-400 to-rose-500' },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
       {/* Header */}
@@ -89,7 +96,9 @@ export default function MyApplications() {
 
       {list.length === 0 ? (
         <div className="card p-16 text-center animate-fade-in-up">
-          <div className="text-6xl mb-4">📭</div>
+          <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+            <Inbox className="w-8 h-8 text-slate-400" />
+          </div>
           <h3 className="text-xl font-bold text-slate-700 mb-2">No applications yet</h3>
           <p className="text-slate-500 mb-6">Start applying to jobs and track your progress here.</p>
           <Link to="/jobs" className="btn-primary px-6 py-3 rounded-xl">
@@ -100,16 +109,12 @@ export default function MyApplications() {
         <>
           {/* Summary stats */}
           <div className="grid grid-cols-3 gap-4 mb-8">
-            {[
-              { label: 'Total Applied', value: list.length, icon: '📬', color: 'from-indigo-500 to-violet-600' },
-              { label: 'Shortlisted', value: statusCounts['Shortlisted'] || 0, icon: '⭐', color: 'from-teal-400 to-cyan-500' },
-              { label: 'Rejected', value: statusCounts['Rejected'] || 0, icon: '❌', color: 'from-red-400 to-rose-500' },
-            ].map((s) => (
+            {summaryStats.map((s) => (
               <div key={s.label} className="card p-4 sm:p-5 text-center group hover:-translate-y-1 transition-all duration-200">
                 <div
-                  className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-lg mx-auto mb-2 group-hover:scale-110 transition-transform`}
+                  className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform`}
                 >
-                  {s.icon}
+                  <s.Icon className="w-5 h-5 text-white" />
                 </div>
                 <p className="text-2xl font-black text-slate-800">{s.value}</p>
                 <p className="text-slate-500 text-xs sm:text-sm font-medium">{s.label}</p>
@@ -120,7 +125,7 @@ export default function MyApplications() {
           {/* Applications list */}
           <ul className="space-y-4">
             {list.map((app, idx) => {
-              const cfg = STATUS_CONFIG[app.status] || { badge: 'badge-blue', icon: '📄', label: app.status };
+              const cfg = STATUS_CONFIG[app.status] || { badge: 'badge-blue', Icon: Mail, label: app.status };
               return (
                 <li
                   key={app._id}
@@ -139,7 +144,7 @@ export default function MyApplications() {
                           </Link>
                           {app.recommended && (
                             <span className="badge badge-green flex items-center gap-1">
-                              ⭐ Recommended
+                              <Star className="w-3 h-3" /> Recommended
                             </span>
                           )}
                         </div>
@@ -155,7 +160,7 @@ export default function MyApplications() {
 
                       <div className="flex items-center gap-3 sm:flex-col sm:items-end">
                         <span className={`${cfg.badge} badge flex items-center gap-1`}>
-                          {cfg.icon} {cfg.label}
+                          <cfg.Icon className="w-3 h-3" /> {cfg.label}
                         </span>
                       </div>
                     </div>

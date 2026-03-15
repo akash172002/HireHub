@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import { AlertTriangle, MapPin, DollarSign, Upload } from 'lucide-react';
 
 const SKILL_COLORS = [
   'bg-indigo-50 text-indigo-700 border-indigo-100',
@@ -67,7 +68,7 @@ export default function PostJob() {
         <div className="p-6 sm:p-8">
           {error && (
             <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2 mb-6 animate-fade-in">
-              <span>⚠️</span>
+              <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
               <span>{error}</span>
             </div>
           )}
@@ -134,8 +135,8 @@ export default function PostJob() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
-                    📍 Location
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-slate-400" /> Location
                   </label>
                   <input
                     type="text"
@@ -147,8 +148,8 @@ export default function PostJob() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
-                    💰 Salary Range
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                    <DollarSign className="w-3.5 h-3.5 text-slate-400" /> Salary Range
                   </label>
                   <input
                     type="text"
@@ -198,14 +199,16 @@ export default function PostJob() {
 
             {/* Submit */}
             <div className="pt-2 flex items-center gap-4">
-              <button type="submit" className="btn-primary px-8 py-3.5 rounded-xl text-base" disabled={loading}>
+              <button type="submit" className="btn-primary px-8 py-3.5 rounded-xl text-base flex items-center gap-2" disabled={loading}>
                 {loading ? (
-                  <span className="flex items-center gap-2">
+                  <>
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     Posting…
-                  </span>
+                  </>
                 ) : (
-                  '📤 Post Job'
+                  <>
+                    <Upload className="w-4 h-4" /> Post Job
+                  </>
                 )}
               </button>
               <p className="text-xs text-slate-400">

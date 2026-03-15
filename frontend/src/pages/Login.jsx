@@ -2,6 +2,14 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import { Sparkles, Zap, BarChart2, Lock, AlertTriangle } from 'lucide-react';
+
+const features = [
+  { Icon: Sparkles, text: 'AI-powered matching' },
+  { Icon: Zap, text: 'Instant applications' },
+  { Icon: BarChart2, text: 'Application tracking' },
+  { Icon: Lock, text: 'Secure & private' },
+];
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -60,14 +68,9 @@ export default function Login() {
           </p>
 
           <div className="mt-10 grid grid-cols-2 gap-3 text-left">
-            {[
-              { icon: '🎯', text: 'AI-powered matching' },
-              { icon: '⚡', text: 'Instant applications' },
-              { icon: '📊', text: 'Application tracking' },
-              { icon: '🔒', text: 'Secure & private' },
-            ].map((f) => (
+            {features.map((f) => (
               <div key={f.text} className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-                <span className="text-xl">{f.icon}</span>
+                <f.Icon className="w-5 h-5 text-white shrink-0" />
                 <span className="text-sm text-white/90 font-semibold">{f.text}</span>
               </div>
             ))}
@@ -104,7 +107,7 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             {error && (
               <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2 animate-fade-in">
-                <span className="mt-0.5">⚠️</span>
+                <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
                 <span>{error}</span>
               </div>
             )}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
+import { Search, MapPin, Building2 } from 'lucide-react';
 
 const SKILL_COLORS = [
   'bg-indigo-50 text-indigo-700 border-indigo-100',
@@ -63,7 +64,7 @@ export default function Jobs() {
         className="card p-4 sm:p-5 mb-8 flex flex-col sm:flex-row gap-3"
       >
         <div className="relative flex-1">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">🔍</span>
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
             className="input pl-10"
@@ -73,7 +74,7 @@ export default function Jobs() {
           />
         </div>
         <div className="relative sm:w-44">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">📍</span>
+          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
             className="input pl-10"
@@ -83,7 +84,7 @@ export default function Jobs() {
           />
         </div>
         <div className="relative sm:w-44">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🏢</span>
+          <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
             className="input pl-10"
@@ -105,7 +106,9 @@ export default function Jobs() {
         </div>
       ) : jobs.length === 0 ? (
         <div className="card p-16 text-center">
-          <div className="text-5xl mb-4">🔎</div>
+          <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+            <Search className="w-8 h-8 text-slate-400" />
+          </div>
           <h3 className="text-xl font-bold text-slate-700 mb-2">No jobs found</h3>
           <p className="text-slate-500">Try adjusting your search filters.</p>
         </div>
@@ -150,12 +153,12 @@ export default function Jobs() {
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 mb-2 ml-13">
                       {job.location && (
                         <span className="flex items-center gap-1">
-                          <span>📍</span> {job.location}
+                          <MapPin className="w-3.5 h-3.5" /> {job.location}
                         </span>
                       )}
                       {job.salary && (
                         <span className="flex items-center gap-1">
-                          <span>💰</span> {job.salary}
+                          <span className="text-slate-400 font-medium">$</span> {job.salary}
                         </span>
                       )}
                     </div>

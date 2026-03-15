@@ -2,10 +2,18 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import { Search, ClipboardList, AlertTriangle, CheckCircle, Bot, Mail, TrendingUp } from 'lucide-react';
 
 const ROLES = [
-  { value: 'SEEKER', label: 'Job Seeker', icon: '🔍', desc: 'Find and apply to jobs' },
-  { value: 'RECRUITER', label: 'Recruiter', icon: '📋', desc: 'Post jobs & find talent' },
+  { value: 'SEEKER', label: 'Job Seeker', Icon: Search, desc: 'Find and apply to jobs' },
+  { value: 'RECRUITER', label: 'Recruiter', Icon: ClipboardList, desc: 'Post jobs & find talent' },
+];
+
+const brandFeatures = [
+  { Icon: CheckCircle, text: 'Free forever — no credit card needed' },
+  { Icon: Bot, text: 'AI parses your resume automatically' },
+  { Icon: Mail, text: 'Get matched to jobs that fit you' },
+  { Icon: TrendingUp, text: 'Track every application in real time' },
 ];
 
 export default function Register() {
@@ -64,14 +72,9 @@ export default function Register() {
           </p>
 
           <div className="mt-10 space-y-3 text-left">
-            {[
-              { icon: '✅', text: 'Free forever — no credit card needed' },
-              { icon: '🤖', text: 'AI parses your resume automatically' },
-              { icon: '📬', text: 'Get matched to jobs that fit you' },
-              { icon: '📈', text: 'Track every application in real time' },
-            ].map((f) => (
+            {brandFeatures.map((f) => (
               <div key={f.text} className="flex items-center gap-3 bg-white/10 rounded-xl p-3 border border-white/10">
-                <span className="text-lg">{f.icon}</span>
+                <f.Icon className="w-5 h-5 text-white shrink-0" />
                 <span className="text-sm text-white/90 font-medium">{f.text}</span>
               </div>
             ))}
@@ -108,7 +111,7 @@ export default function Register() {
           <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             {error && (
               <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2 animate-fade-in">
-                <span>⚠️</span>
+                <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
@@ -168,7 +171,9 @@ export default function Register() {
                         : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
                     }`}
                   >
-                    <div className="text-2xl mb-1">{r.icon}</div>
+                    <r.Icon
+                      className={`w-6 h-6 mb-1.5 ${role === r.value ? 'text-indigo-600' : 'text-slate-400'}`}
+                    />
                     <div className={`font-bold text-sm ${role === r.value ? 'text-indigo-700' : 'text-slate-700'}`}>
                       {r.label}
                     </div>
