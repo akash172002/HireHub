@@ -70,7 +70,7 @@ export const updateProfile = async (req, res) => {
     console.log("[Profile] OK – Profile updated in DB | _id:", user?._id);
     res.json(user);
   } catch (err) {
-    console.error("[Profile] Error – profile NOT updated:", err.name, err.message);
+    console.error("[Profile] Error – profile NOT updated:", JSON.stringify(err));
     res.status(500).json({ message: err.message });
   }
 };
