@@ -62,14 +62,13 @@ export default function Profile() {
     if (photoFile) fd.append('photo', photoFile);
     if (resumeFile) fd.append('resume', resumeFile);
     try {
-      const { data } = await api.put('/users/me', fd, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const { data } = await api.put('/users/me', fd);
       setProfile(data);
       updateUser(data);
       setMessage('success');
       setPhotoFile(null);
       setPhotoPreview(null);
+      setResumeFile(null);
     } catch (err) {
       setMessage(err.response?.data?.message || 'Update failed');
     } finally {
