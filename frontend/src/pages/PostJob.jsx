@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import { AlertTriangle, MapPin, DollarSign, Upload } from 'lucide-react';
+import { AlertTriangle, MapPin, IndianRupee, Upload } from 'lucide-react';
 
 const SKILL_COLORS = [
   'bg-indigo-50 text-indigo-700 border-indigo-100',
@@ -149,7 +149,7 @@ export default function PostJob() {
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                    <DollarSign className="w-3.5 h-3.5 text-slate-400" /> Salary Range
+                    <IndianRupee className="w-3.5 h-3.5 text-slate-400" /> Salary Range
                   </label>
                   <input
                     type="text"

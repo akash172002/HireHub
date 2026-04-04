@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
-import { MapPin, DollarSign, CheckCircle, Clock, XCircle, Building2 } from 'lucide-react';
+import { MapPin, IndianRupee, CheckCircle, Clock, XCircle, Building2 } from 'lucide-react';
 
 const SKILL_COLORS = [
   'bg-indigo-50 text-indigo-700 border-indigo-100',
@@ -117,7 +117,7 @@ export default function JobDetail() {
                   )}
                   {job.salary && (
                     <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 font-medium">
-                      <DollarSign className="w-3.5 h-3.5" /> {job.salary}
+                      <IndianRupee className="w-3.5 h-3.5" /> {job.salary}
                     </span>
                   )}
                   {job.status && (
@@ -242,7 +242,7 @@ export default function JobDetail() {
               )}
               {job.salary && (
                 <div className="flex items-center gap-3">
-                  <DollarSign className="w-5 h-5 text-slate-400 shrink-0" />
+                  <IndianRupee className="w-5 h-5 text-slate-400 shrink-0" />
                   <div>
                     <p className="text-xs text-slate-400 font-medium">Salary</p>
                     <p className="text-slate-700 font-semibold">{job.salary}</p>

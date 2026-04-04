@@ -4,7 +4,6 @@ import User from "../models/User.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import { extractTextFromPDF } from "../utils/pdfParser.js";
 import { getMatchScore } from "../utils/matchScore.js";
-import cloudinary from "../config/cloudinary.js";
 
 export const applyJob = async (req, res) => {
   try {
@@ -34,14 +33,7 @@ export const applyJob = async (req, res) => {
       return res.status(400).json({ message: "Already applied" });
     }
 
-    const resumeUrl = user.resumePublicId
-      ? cloudinary.utils.private_download_url(user.resumePublicId, "", {
-          resource_type: "raw",
-          type: "authenticated",
-          attachment: false,
-          expires_at: Math.floor(Date.now() / 1000) + 600,
-        })
-      : user.resume;
+    const resumeUrl = user.resume;
     const resumeText = await extractTextFromPDF(resumeUrl);
     const jobText = `${job.title} ${job.description} ${(job.skills || []).join(" ")}`;
     const mlResult = getMatchScore(resumeText, jobText);

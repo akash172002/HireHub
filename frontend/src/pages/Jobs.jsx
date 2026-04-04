@@ -158,7 +158,7 @@ export default function Jobs() {
                       )}
                       {job.salary && (
                         <span className="flex items-center gap-1">
-                          <span className="text-slate-400 font-medium">$</span> {job.salary}
+                          <span className="text-slate-400 font-medium">₹</span> {job.salary}
                         </span>
                       )}
                     </div>
